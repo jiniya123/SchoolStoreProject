@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    Welcome to the college store form.
+{% endblock %}
+
+{% block title %}
+    {{ user.username }} SchoolStore.com
+{% endblock %}
+
+{% block content %}
+<div style="background-color: pink;">
+    {% if user.is_authenticated %}
+        {% if submitted %}
+            <div class="col-12 alert alert-success" role="alert">
+                Order confirmed!
+            </div>
+            <div class="col-12">
+                <center><a href="/" class="btn btn-info">HOME</a></center>
+            </div>
+        {% else %}
+            <div class="col-6 form-group mt-2 mx-auto">
+                <h3>Fill the form below.</h3>
+                <form action="" method="post" id="detailForm" data-courses-url="{% url 'school_store_app:ajax_load_courses' %}" class="row g-3 mt-2">
+                    {% csrf_token %}
+                    {{ form.as_div }}
+                    <center><input type="submit" value="SUBMIT" class="btn btn-info"></center>
+                </form>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="col-12 alert alert-danger" role="alert">
+            Please log in or register!
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <center><a href="{% url 'school_store_app:login' %}" class="btn btn-info" style="width:20%;margin-left:50%;">Log in</a></center>
+            </div>
+            <div class="col-6">
+                <center><a href="{% url 'school_store_app:register' %}" class="btn btn-info" style="width:20%;margin-right:50%;">Register</a></center>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+    <script>
+        const form = document.getElementById('detailForm');
+        const departmentDropdown = document.getElementById('id_department');
+        const coursesDropdown = document.getElementById('id_course');
+
+        // Function to filter courses based on the selected department
+        function filterCourses() {
+            const selectedDepartmentId = departmentDropdown.value;
+
+            // Clear previous options
+            coursesDropdown.innerHTML = '<option value="" disabled selected>Select Course</option>';
+
+            // If "Select Department First" is selected, disable the "Courses" dropdown
+            if (!selectedDepartmentId) {
+                coursesDropdown.disabled = true;
+                return;
+            }
+
+            // Fetch courses using AJAX
+            fetch(`{% url 'school_store_app:ajax_load_courses' %}?department_id=${selectedDepartmentId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate the "Courses" dropdown with retrieved data
+                    data.courses.forEach(course => {
+                        const option = document.createElement('option');
+                        option.value = course.id;
+                        option.textContent = course.name;
+                        coursesDropdown.appendChild(option);
+                    });
+
+                    // Enable the "Courses" dropdown
+                    coursesDropdown.disabled = false;
+                })
+                .catch(error => console.error('Error fetching courses:', error));
+        }
+
+        // Event listener to trigger course filtering when department changes
+        departmentDropdown.addEventListener('change', filterCourses);
+
+        // Initial state: Disable the "Courses" dropdown
+        coursesDropdown.disabled = true;
+    </script>
+
+{% endblock %}

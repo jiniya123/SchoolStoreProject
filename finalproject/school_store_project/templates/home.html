@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+        Welcome to the school store.
+{% endblock %}
+
+{% block title %}
+      SchoolStore.com
+{% endblock %}
+
+{% block content %}
+<div style="background-color: pink;">
+{% if user.is_authenticated %}
+    <div class="card home-page" style="background-color: lightcoral;" >
+      <h5 class="card-header">Alert</h5>
+      <div class="card-body">
+        <h5 class="card-title">Log out</h5>
+        <p class="card-text">Hello {{user.username}}, For log out click the button below.</p>
+        <a href="{% url 'school_store_app:logout' %}" class="btn btn-outline-info" style="background-color: pink;">Log Out</a>
+      </div>
+    </div>
+{% else %}
+    <div class="card mt-3 home-page custom-card">
+  <div class="card-header">
+    College Description
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+      Welcome to St. Teresa’s College, where we empower women to become innovative, compassionate leaders. With a rich history of academic excellence and a commitment to social responsibility, we provide a vibrant and inclusive community for our students. Explore our programs, events, and resources to discover how we can help you achieve your academic and personal goals.
+        The college is named after St. Teresa of Avila. Though a saint of the 16th Century, St. Teresa is a model for youth in any age and time. Her teachings form the basis of Catholic Spirituality. She lived the life of a contemplative nun and later was named as the “Doctor of the Church”. Allison Peers, who translated her life said, “Her purely human qualities and gifts, the saintliness of her life, the naturalness and candour of her manner and style, these are some of the reasons why her name is not only graven upon the enduring marble of history but taken on the lips of generation after generation with reverence and love”.
+        St.Teresa’s College, a pioneering institution in the field of Higher Education in India, was established on 15th June in the year 1925, as the first Women’s College of the erstwhile Cochin State and the second in the whole of Kerala by the Congregation of the Carmelite Sisters of St.Teresa. The College started with Sr.Beatrice as its first Principal and Mother Veronica as the first Manager and a student strength of just 41. While high academic standards were maintained in the college from the very start, students were also taught the value and dignity of labour, good social relationship and above all, lasting spiritual values. College was a second grade Arts College affiliated to the Madras University and offered the Intermediate Course with Ancient History, Modern History and Logic under Part lll.
+    </p>
+  </div>
+         <div class="card-body">
+            <img src="{% static 'img/college.jpeg' %}" class="img-fluid" alt="College Image" style="width:1500px;">
+        </div>
+</div>
+
+{% endif %}
+    </div>
+{% endblock %}
